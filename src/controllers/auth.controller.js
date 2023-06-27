@@ -1,9 +1,14 @@
 import User from "../models/auth.model.js";
 import bcrypt from "bcryptjs";
+import { createAccessToken } from "../lib/createToken.js";
 
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    const userFound = await User.findOne({ email });
+    if (userFound)
+      return res.status(400).json({ message: "The email is already in use" });
 
     const passwordHash = await bcrypt.hash(password, 12);
 
@@ -13,6 +18,9 @@ export const register = async (req, res) => {
       password: passwordHash,
     });
     const userSaved = await newUser.save();
+
+    const token = await createAccessToken({ id: userSaved.id });
+    res.cookie("token", token);
     res.json({
       id: userSaved._id,
       username: userSaved.username,
@@ -36,6 +44,9 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, userFound.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credential" });
+
+    const token = await createAccessToken({ id: userFound.id });
+    res.cookie("token", token);
     res.json({
       id: userFound._id,
       username: userFound.username,
@@ -46,4 +57,8 @@ export const login = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
+};
+
+export const profile = async (req, res) => {
+  res.json({ message: "Profile" });
 };
