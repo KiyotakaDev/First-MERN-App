@@ -6,7 +6,7 @@ export const getAllTasks = async (req, res) => {
 };
 
 export const getTask = async (req, res) => {
-  const task = await Task.findById(req.paramas.id);
+  const task = await Task.findById(req.params.id);
   if (!task) return res.status(400).json({ message: "Task not found" });
   return res.json(task);
 };
