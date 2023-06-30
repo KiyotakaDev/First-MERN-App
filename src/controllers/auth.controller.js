@@ -8,7 +8,7 @@ export const register = async (req, res) => {
 
     const userFound = await User.findOne({ email });
     if (userFound)
-      return res.status(409).json({ message: "The email is already in use" });
+      return res.status(409).json({ message: ["The email is already in use"] });
 
     const passwordHash = await bcrypt.hash(password, 12);
 
