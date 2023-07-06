@@ -1,4 +1,4 @@
-## MERN Stack CRUD with JWT
+## Tic Toe Toe Proyect
 
 This is a web application using ReactJS (frontend), ExpressJS as NodeJS framework (backend) and using MongoDB (database).
 
